@@ -1,0 +1,32 @@
+{
+    "BTC": {
+        "name": "Bitcoin"
+    },
+    "ETH": {
+        "name": "Ethereum"
+    },
+    "USDT": {
+        "name": "Tether"
+    },
+    "USDC": {
+        "name": "USD Coin"
+    },
+    "BNB": {
+        "name": "Binance Coin"
+    },
+    "BUSD": {
+        "name": "Binance USD"
+    },
+    "XRP": {
+        "name": "XRP"
+    },
+    "ADA": {
+        "name": "Cardano"
+    },
+    "SOL": {
+        "name": "Solana"
+    },
+    "Dogecoin": {
+        "name": "DOGE"
+    }
+}
