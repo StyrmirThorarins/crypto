@@ -2,27 +2,41 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import CryptoGraph from '../components/CryptoGraph'
-import CryptoList from '../components/CryptoList'
+import CryptoAvailable from '../components/CryptoAvailable'
+import CryptoSelected from '../components/CryptoSelected'
 import { useState, useEffect } from 'react'
+import { getCryptoAcronymList } from '../lib/api/crypto'
 import styles from '../styles/Home.module.css'
 
 const Home: NextPage = () => {
 
-  const [cryptoFree, setCryptoFree] = useState<string[]>([])
-  const [cryptoUsed, setCryptoUsed] = useState<string[]>([])
-  const [cryptoGraphList, setCryptoGraphList] = useState<string[]>([])
+  const [selectedCrypto, setSelectedCrypto] = useState<string[]>([])
+  const [availableCrypto, setAvailableCrypto] = useState<string[]>(getCryptoAcronymList())
+
+/*
+  useEffect(() => {
+    // getCryptoList(['BTC', 'ADA'])
+    // const cryptoList = getCryptoList(selectedCrypto)
+    // setCryptoGraphList(cryptoList)
+  }), [selectedCrypto];
 
   useEffect(() => {
-    console.log('cryptoFree', cryptoFree)
-  }), [cryptoFree];
+  }), [availableCrypto];
 
   useEffect(() => {
-    console.log('cryptoUsed', cryptoUsed)
-  }), [cryptoUsed];
-
-  useEffect(() => {
-    console.log('cryptoGraphList', cryptoGraphList)
   }), [cryptoGraphList];
+*/
+
+
+  const addCrypto = (acronym: string) => {
+    setSelectedCrypto([...selectedCrypto, acronym])
+    setAvailableCrypto(availableCrypto.filter(crypto => crypto !== acronym))
+  }
+
+  const removeCrypto = (acronym: string) => {
+    setAvailableCrypto([...availableCrypto, acronym])
+    setSelectedCrypto(selectedCrypto.filter(item => item !== acronym))
+  }
 
   return (
     <div className={styles.container}>
@@ -34,23 +48,23 @@ const Home: NextPage = () => {
 
       <main className={styles.main}>
 
-      <div className='flex'>
+        <div className='flex'>
 
-        <div className='object-center flex-1 p-4'>
-          <div>
-            <p className='text-white text-lg'>Enter Crypto Name or Acronym</p>
-            <input type="text" className='w-64 p-2 my-4 bg-gray-100 border-2 border-gray-200 rounded-lg' placeholder="Search" />
+          <div className='object-center flex-1 p-4'>
+            <div>
+              <p className='text-white text-lg'>Enter Crypto Name or Acronym</p>
+              <input type="text" className='w-64 p-2 my-4 bg-gray-100 border-2 border-gray-200 rounded-lg' placeholder="Search" />
+            </div>
+            <div>
+              <CryptoSelected selectedCrypto={selectedCrypto} removeCrypto={removeCrypto} />
+              <CryptoAvailable availableCrypto={availableCrypto} addCrypto={addCrypto} />
+            </div>
           </div>
-          <div className='mt-2'>
-            <CryptoList />
+
+          <div className='flex-1 p-4' style={{ width: 800 }} >
+            <CryptoGraph cryptoSelected={CryptoSelected} />
           </div>
         </div>
-
-        <div className='flex-1 p-4' style={{width: 800}} >
-          <CryptoGraph cryptoList={cryptoGraphList} />
-        </div>
-
-      </div>
 
       </main>
 
