@@ -5,7 +5,7 @@ import CryptoGraph from '../components/CryptoGraph'
 import CryptoAvailable from '../components/CryptoAvailable'
 import CryptoSelected from '../components/CryptoSelected'
 import { useState, useEffect } from 'react'
-import { getCryptoAcronymList } from '../lib/api/crypto'
+import { getCryptoAcronymList, fetchCryptoData } from '../lib/api/crypto'
 import styles from '../styles/Home.module.css'
 
 const Home: NextPage = () => {
@@ -31,6 +31,10 @@ const Home: NextPage = () => {
   const addCrypto = (acronym: string) => {
     setSelectedCrypto([...selectedCrypto, acronym])
     setAvailableCrypto(availableCrypto.filter(crypto => crypto !== acronym))
+
+    fetchCryptoData(acronym).then(data => {
+      console.log('fetchCryptoData data: ', data)
+    })
   }
 
   const removeCrypto = (acronym: string) => {

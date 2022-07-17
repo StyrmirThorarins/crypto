@@ -10,9 +10,14 @@ export const getLocalCryptoListData = () => {
     return cryptoList;
 }
 
-// fetch crypto timeseries data from coingecko API
-export const fetchCryptoData = async (acronym: string) => {
-    const url = `https://api.coingecko.com/api/v3/coins/${acronym}`
+// fetch crypto timeseries data from cryptocompare.com API
+export const fetchCryptoData = async (acronym: string, currencySymbol: string = 'USD') => {
+    const apiKey = process.env.CRYPTO_COMPARE_API_KEY;
+    const queryLengthLimit = 10  // max 2000
+
+    // API refercence: https://min-api.cryptocompare.com/documentation?key=Historical&cat=dataHistoday
+    const url = `https://min-api.cryptocompare.com/data/v2/histoday?fsym=${acronym}&tsym=${currencySymbol}&limit=${queryLengthLimit}&api_key=${apiKey}`;
+
     const response = await fetch(url)
     const data = await response.json()
     return data
