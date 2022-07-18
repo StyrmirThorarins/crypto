@@ -17,6 +17,7 @@ export const fetchCryptoData = async (acronym: string, currencySymbol: string = 
 
     // API refercence: https://min-api.cryptocompare.com/documentation?key=Historical&cat=dataHistoday
     const url = `https://min-api.cryptocompare.com/data/v2/histoday?fsym=${acronym}&tsym=${currencySymbol}&limit=${queryLengthLimit}&api_key=${apiKey}`;
+    console.log('fetchCryptoData url: ', url)
 
     const response = await fetch(url)
     const data = await response.json()
