@@ -5,17 +5,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowCircleRight } from '@fortawesome/free-solid-svg-icons'
 import { getCryptoList } from '../lib/api/crypto'
 
-const CryptoAvailable = (props: any) => {
-    const cryptoList = getCryptoList(props.availableCrypto)
+const CryptoList = (props: any) => {
 
     return (
         <div className='text-white py-2'>
             <ul className="items-list">
-                {cryptoList.map((item: any) => (
-                    <li key={item[0]}>{item[0]} - {item[1]} <FontAwesomeIcon icon={faArrowCircleRight} onClick={() => props.addCrypto(item[0])} /></li>
+                {props.availableCrypto.map((item: any) => (
+                    <li key={item}>{item} <FontAwesomeIcon icon={faArrowCircleRight} onClick={() => props.addCrypto(item)} /></li>
                 ))}
             </ul>
         </div>
     )
 }
-export default CryptoAvailable
+export default CryptoList
