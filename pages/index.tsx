@@ -12,7 +12,7 @@ import React from 'react'
 const Home: NextPage = () => {
 
   const [selectedCrypto, setSelectedCrypto] = useState<string[]>([])
-  const [availableCrypto, setAvailableCrypto] = useState<string[]>(['Loading...'])
+  const [completeCryptoList, setcompleteCryptoList] = useState<string[]>(['Loading...'])
   const [visibleCrypto, setVisibleCrypto] = useState<string[]>(['Loading...'])
 
   // fetch async data during initial load
@@ -21,23 +21,23 @@ const Home: NextPage = () => {
   useEffect(() => {
     getCompleteCryptoList().then(data => {
       console.log('loading cryptoList: ', data)
-      setAvailableCrypto(data)
+      setcompleteCryptoList(data)
       setVisibleCrypto(data)
     }).catch(err => {
       console.log('getCompleteCryptoList: ', err)
     })
   }, [loading])
 
-  // add crypto to selected list, remove from available list
+  // add crypto to selected list, remove from visible list
   const addCrypto = (acronym: string) => {
     console.log('addCrypto: ', acronym)
     setSelectedCrypto([...selectedCrypto, acronym])
-    setAvailableCrypto(availableCrypto.filter(crypto => crypto !== acronym))
+    setVisibleCrypto(visibleCrypto.filter(crypto => crypto !== acronym))
   }
 
   // remove crypto from selected list, add to available list
   const removeCrypto = (acronym: string) => {
-    setAvailableCrypto([...availableCrypto, acronym])
+    setVisibleCrypto([...visibleCrypto, acronym])
     setSelectedCrypto(selectedCrypto.filter(item => item !== acronym))
   }
 
@@ -60,19 +60,19 @@ const Home: NextPage = () => {
   }
 
   // @param: input element
-  // searches through availableCrypto for matches to input element value, updates visibleCrypto with results
+  // searches through completeCryptoList for matches to input element value, updates visibleCrypto with results
   const updateVisibleCrypto = (element: any) => {
     const text = element.nativeEvent.target.value
 
     // if input is empty, show all available crypto
     if (text === '') {
-      setVisibleCrypto(availableCrypto)
+      setVisibleCrypto(completeCryptoList)
       return
     }
 
     // filter available crypto list for matches to input text and create new array to hold matches
     let newVisibleCrypto: string[] = []
-    availableCrypto.forEach(item => {
+    completeCryptoList.forEach(item => {
       if (item.includes(text.toUpperCase())) {
         newVisibleCrypto.push(item)
       }
@@ -107,7 +107,7 @@ const Home: NextPage = () => {
 
         <div className='flex'>
 
-          <div className='object-center flex-1 p-4'>
+          <div className='flex-1 p-4'>
 
             <div>
               <div className='border border-white rounded-md p-4 my-4'>
@@ -115,18 +115,18 @@ const Home: NextPage = () => {
                 <CryptoSelected selectedCrypto={selectedCrypto} removeCrypto={removeCrypto} />
               </div>
               <div>
-                <p className='text-white text-lg'>Enter Crypto Acronym to Filter Crypto List</p>
+                <label className='text-white text-lg'>Enter Crypto Acronym to Filter Non-Selected Crypto List</label>
                 <input type="text" onChange={(e) => updateVisibleCrypto(e)} className='w-64 p-2 my-4 bg-gray-100 border-2 border-gray-200 rounded-lg' placeholder="Search" />
               </div>
               <div className='border border-white rounded-md p-4 my-4'>
-                <label className='text-white text-lg'>Crypto List</label>
-                <CryptoList availableCrypto={visibleCrypto} addCrypto={addCrypto} />
+                <label className='text-white text-lg'>Non-Selected Crypto List</label>
+                <CryptoList visibleCrypto={visibleCrypto} addCrypto={addCrypto} />
               </div>
             </div>
           </div>
 
           <div className='flex-1 p-4' style={{ width: 800 }} >
-            {/* <CryptoGraph cryptoSelected={CryptoSelected} /> */}
+            <CryptoGraph cryptoSelected={CryptoSelected} />
           </div>
         </div>
 

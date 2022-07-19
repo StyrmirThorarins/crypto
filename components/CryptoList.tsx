@@ -8,9 +8,9 @@ import { getCryptoList } from '../lib/api/crypto'
 const CryptoList = (props: any) => {
 
     return (
-        <div className='text-white py-2'>
+        <div className='text-white py-2 overflow-y-scroll h-96'>
             <ul className="items-list">
-                {props.availableCrypto.map((item: any) => (
+                {props.visibleCrypto.map((item: any) => (
                     <li key={item}>{item} <FontAwesomeIcon icon={faArrowCircleRight} onClick={() => props.addCrypto(item)} /></li>
                 ))}
             </ul>
