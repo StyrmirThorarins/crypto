@@ -2,22 +2,24 @@
 # visit http://127.0.0.1:8050/ in your web browser.
 
 import logging
+from urllib import response
 from dash import Dash, html, dcc
 import plotly.express as px
 import pandas as pd
 import requests
 import os
-from dotenv import load_dotenv
+from dotenv import load_dotenv  # to load .env variables
 import logging
-from flask import Flask
 from flask_cors import CORS  # https://flask-cors.readthedocs.io/en/latest/#:~:text=Simple%20Usage,CORS(app)%20%40app.
 
 load_dotenv()
 # logging.basicConfig(level=logging.DEBUG)
 
+
 app = Dash(__name__)
-api = Flask(__name__)
-CORS(app)  # enable CORS for flask server
+server = app.server
+CORS(app.server)
+
 
 # fetch data
 def fetch_data(crypto_acronyms):
@@ -35,18 +37,22 @@ def fetch_data(crypto_acronyms):
 fig = px.line()
 fig = fetch_data(['BTC', 'ETH'])
 
-##
-# add cross-server authentication to flask  headers: {"Access-Control-Allow-Origin": "*"}
-##
 
-@api.route('/api/test')
+### ROUTES START ###
+
+# test connection to server
+@server.route('/api/test')
 def text():
-    return "Hello World"
+    logging('/api/test route called')
+    response = "Hello World"
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
+
 
 # set up app API to return graph html
-@api.route('/api/pyplotgraph')
+@server.route('/api/pyplotgraph')
 def plotly_graph():
-    layout = html.Div(children=[
+    response = html.Div(children=[
         html.H1(children='Crypto Demo with Python, Plotly and Flask'),
 
         html.Label('Select the crypto currencies you want to compare:'),
@@ -60,9 +66,26 @@ def plotly_graph():
         )
     ], style={'padding': 10, 'flex': 1})
 
-    return layout
+    response.headers.add('Access-Control-Allow-Origin', '*')
 
+    return response
+
+### ROUTES END ###
+
+app.layout = html.Div(children=[
+    html.H1(children='Crypto Demo with Python, Plotly and Flask'),
+
+    html.Label('Select the crypto currencies you want to compare:'),
+    html.Br(),
+    dcc.Checklist(['BTC', 'ETH', 'USDT', 'USDC', 'BNB', 'BUSD', 'XRP', 'ADA', 'SOL', 'DOGE']),
+
+    # render plotly graph
+    dcc.Graph(
+        id='crypto-graph',
+        figure=fig
+    )
+], style={'padding': 10, 'flex': 1})
 
 # run the app
 if __name__ == '__main__':
-    app.run_server(debug=False)
+    app.run_server(debug=True)

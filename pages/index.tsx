@@ -1,6 +1,7 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
+import CryptoGraphFlask from '../components/CryptoGraphFlask'
 import CryptoGraph from '../components/CryptoGraph'
 import CryptoList from '../components/CryptoList'
 import CryptoSelected from '../components/CryptoSelected'
@@ -41,24 +42,6 @@ const Home: NextPage = () => {
     setSelectedCrypto(selectedCrypto.filter(item => item !== acronym))
   }
 
-  // get pytorch graph data for selected crypto
-  const getGraph = () => {
-
-    for (let crypto in selectedCrypto) {
-      getCryptoData(crypto)
-        .then(data => {
-          console.log('addCrypto data returned: ', data)
-        })
-        .catch(error => {
-          console.log('addCrypto error: ', error)
-        })
-    }
-
-    getPytorchGraph('BTC').then(data => {
-      return data
-    })
-  }
-
   // @param: input element
   // searches through completeCryptoList for matches to input element value, updates visibleCrypto with results
   const updateVisibleCrypto = (element: any) => {
@@ -89,11 +72,6 @@ const Home: NextPage = () => {
     setVisibleCrypto([])
     setVisibleCrypto(newVisibleCrypto)
   }
-
-  // const graphHtml = getGraph()
-  // console.log('graphHtml: ', graphHtml)
-
-  const graph = '<p>graph</p>'
 
   return (
     <div className={styles.container}>
@@ -126,15 +104,9 @@ const Home: NextPage = () => {
           </div>
 
           <div className='flex-1 p-4' style={{ width: 800 }} >
-            <CryptoGraph cryptoSelected={CryptoSelected} />
+            <CryptoGraphFlask cryptoSelected={CryptoSelected} />
+            {/* <CryptoGraph cryptoSelected={CryptoSelected} /> */}
           </div>
-        </div>
-
-        <div>
-          <div
-            dangerouslySetInnerHTML={{ __html: graph }}
-          />
-
         </div>
 
       </main>
