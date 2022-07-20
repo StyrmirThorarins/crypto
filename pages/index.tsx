@@ -17,7 +17,7 @@ const Home: NextPage = () => {
   const [visibleCrypto, setVisibleCrypto] = useState<string[]>(['Loading...'])
 
   // fetch async data during initial load
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getCompleteCryptoList().then(data => {
@@ -87,13 +87,13 @@ const Home: NextPage = () => {
 
           <div className='flex-1 p-4'>
 
-            <div>
+            <div className=''>
               <div className='border border-white rounded-md p-4 my-4'>
                 <label className='text-white text-lg'>Selected Crypto</label>
                 <CryptoSelected selectedCrypto={selectedCrypto} removeCrypto={removeCrypto} />
               </div>
               <div>
-                <label className='text-white text-lg'>Enter Crypto Acronym to Filter Non-Selected Crypto List</label>
+                <label className='text-white text-lg p-2'>Enter Crypto Acronym to Filter Non-Selected Crypto List</label><br/>
                 <input type="text" onChange={(e) => updateVisibleCrypto(e)} className='w-64 p-2 my-4 bg-gray-100 border-2 border-gray-200 rounded-lg' placeholder="Search" />
               </div>
               <div className='border border-white rounded-md p-4 my-4'>

@@ -1,22 +1,23 @@
 # Run this app with `python app.py` and
 # visit http://127.0.0.1:8050/ in your web browser.
 
-import logging
 from urllib import response
 from dash import Dash, html, dcc
+from flask import jsonify, request
 import plotly.express as px
 import pandas as pd
 import requests
 import os
 from dotenv import load_dotenv  # to load .env variables
 import logging
-from flask_cors import CORS  # https://flask-cors.readthedocs.io/en/latest/#:~:text=Simple%20Usage,CORS(app)%20%40app.
+# https://flask-cors.readthedocs.io/en/latest/#:~:text=Simple%20Usage,CORS(app)%20%40app.
+from flask_cors import CORS
 
 load_dotenv()
-# logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG)
 
 
-app = Dash(__name__)
+app = Dash(__name__, url_base_pathname='/app/')
 server = app.server
 CORS(app.server)
 
@@ -32,32 +33,51 @@ def fetch_data(crypto_acronyms):
 
     return px.line(df, x='time', y="open")
 
+
 # set up plotly graph, https://plotly.com/python/px-arguments/
 # https://community.plotly.com/t/announcing-plotly-py-4-8-plotly-express-support-for-wide-and-mixed-form-data-plus-a-pandas-backend/40048/10
 fig = px.line()
-fig = fetch_data(['BTC', 'ETH'])
+fig = fetch_data(['BTC'])
 
 
 ### ROUTES START ###
 
-# test connection to server
-@server.route('/api/test')
-def text():
-    logging('/api/test route called')
+@server.route('/app/<crypto_list>')
+def route_root():
+    logging.debug('root route', crypto_list)
+    fig = fetch_data(['ETH'])
+    return jsonify({'message': 'this is route route'})
+
+
+@server.route('/')
+def route1():
+    return jsonify({'message': 'this is the first route'})
+
+
+@server.route('/test&<crypto_list>')
+def route2(crypto_list):
+    args = request.view_args['crypto_list']
+    return jsonify({'message': 'this is the second route' + args})
+    #return f'Test {crypto_list}'
+
+
+@server.route('/test2')
+def route3():
     response = "Hello World"
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    return response
+    return jsonify({'message': response})
 
 
 # set up app API to return graph html
-@server.route('/api/pyplotgraph')
-def plotly_graph():
-    response = html.Div(children=[
+@server.route('/pyplotgraph')
+def route_plotly_graph():
+    fig = px.line()
+    # fig = fetch_data(['BTC'])
+
+    app.layout = html.Div(children=[
         html.H1(children='Crypto Demo with Python, Plotly and Flask'),
 
         html.Label('Select the crypto currencies you want to compare:'),
         html.Br(),
-        dcc.Checklist(['BTC', 'ETH', 'USDT', 'USDC', 'BNB', 'BUSD', 'XRP', 'ADA', 'SOL', 'DOGE']),
 
         # render plotly graph
         dcc.Graph(
@@ -66,26 +86,23 @@ def plotly_graph():
         )
     ], style={'padding': 10, 'flex': 1})
 
-    response.headers.add('Access-Control-Allow-Origin', '*')
+    logging.debug('route_plotly_graph', app.layout)
+    # json_response = {"html": response}
 
-    return response
+    return jsonify({'html': 'test'})
 
 ### ROUTES END ###
 
-app.layout = html.Div(children=[
-    html.H1(children='Crypto Demo with Python, Plotly and Flask'),
 
-    html.Label('Select the crypto currencies you want to compare:'),
-    html.Br(),
-    dcc.Checklist(['BTC', 'ETH', 'USDT', 'USDC', 'BNB', 'BUSD', 'XRP', 'ADA', 'SOL', 'DOGE']),
+app.layout = html.Div(children=[
 
     # render plotly graph
     dcc.Graph(
         id='crypto-graph',
         figure=fig
     )
-], style={'padding': 10, 'flex': 1})
+])
 
 # run the app
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=False)

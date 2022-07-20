@@ -49,8 +49,8 @@ export const getCryptoData = async (acronym: string, currencySymbol: string = 'U
 
 // return html for pyplot graph, created by calling API on a python Flask server that handles the data fetching and html constructing
 export const getPytorchGraph = async (acronyms: string[], currencySymbol: string = 'USD') => {
-    //const url = `http://localhost:8050/api/pyplotgraph`;
-    const url = `http://localhost:8050/api/test`;
+    //const url = `http://localhost:8050/pyplotgraph`;
+    const url = `http://localhost:8050/test`;
 
 
     await axios.get(url, {
