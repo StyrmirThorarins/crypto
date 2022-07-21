@@ -6,7 +6,7 @@ import CryptoGraph from '../components/CryptoGraph'
 import CryptoList from '../components/CryptoList'
 import CryptoSelected from '../components/CryptoSelected'
 import { useState, useEffect } from 'react'
-import { getCompleteCryptoList, getCryptoAcronymList, getCryptoData, getPytorchGraph } from '../lib/api/crypto'
+import { getCompleteCryptoList, getCryptoAcronymList, getCryptoData, getPlotlyGraph } from '../lib/api/crypto'
 import styles from '../styles/Home.module.css'
 import React from 'react'
 
