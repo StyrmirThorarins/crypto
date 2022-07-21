@@ -87,6 +87,10 @@ const Home: NextPage = () => {
 
           <div className='flex-1 p-4'>
 
+            <link href='https://github.com/StyrmirThorarins/crypto'>Project GitHub Code</link>
+            <link href='https://github.com/StyrmirThorarins/crypto/blob/main/python/data%20handling%20workbook.ipynb'>Python notebook</link>
+            <p>Python flask server and and sample data ipynb is in the /python folder.</p>
+
             <div className=''>
               <div className='border border-white rounded-md p-4 my-4'>
                 <label className='text-white text-lg'>Selected Crypto</label>
