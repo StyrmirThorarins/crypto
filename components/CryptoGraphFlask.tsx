@@ -15,7 +15,7 @@ const CryptoGraphFlask = (props: any) => {
 
     return (
         <>
-            <label className='text-white'>Plotly API data and graph handled and rendered on python Flask server.</label>
+            <label className='text-white'>Graph generated and returned by python Flask server. Python handles all API, data handling and Plotly plot graph rendering.</label>
             <br/><br/>
             {cryptoList.length > 0
                 ? <iframe src={url} className='w-full h-full' style={{height: 600}}></iframe>

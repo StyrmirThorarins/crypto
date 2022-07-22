@@ -89,13 +89,13 @@ const Home: NextPage = () => {
             <div className='text-slate-300'>
               <p>Project code links on GitHub :</p>
               <div className='ml-4 mt-2'>
-                <Link href='https://github.com/StyrmirThorarins/crypto' target="_blank">Main Directory</Link><br />
-                <Link href='https://github.com/StyrmirThorarins/crypto/blob/main/python/app.py' target="_blank">Flask Server</Link><br />
-                <Link href='https://github.com/StyrmirThorarins/crypto/blob/main/python/data%20handling%20workbook.ipynb' target="_blank">Python notebook</Link>
+                <Link href='https://github.com/StyrmirThorarins/crypto' passHref><a target="_blank">Main Directory</a></Link><br />
+                <Link href='https://github.com/StyrmirThorarins/crypto/blob/main/python/app.py' passHref><a target="_blank">Flask Server</a></Link><br />
+                <Link href='https://github.com/StyrmirThorarins/crypto/blob/main/python/data%20handling%20workbook.ipynb' passHref><a target="_blank">Python notebook</a></Link>
               </div>
             </div>
 
-            <div className='mt-14'>
+            <div className='mt-16'>
               <div className='border border-white rounded-md p-4 my-4'>
                 <label className='text-white text-lg'>Selected Crypto</label><br />
                 <span className='text-slate-300 text-sm italic'>If a crypto currency does not show up on the graph, then the API service does not have its time series data. Or the number of queries have been maxed out for the month.</span>
