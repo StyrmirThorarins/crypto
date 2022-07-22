@@ -3,11 +3,9 @@ import { getPlotlyGraph } from '../lib/api/crypto'
 const CryptoGraphFlask = (props: any) => {
 
     const cryptoList = props.selectedCrypto
-    // const url = `http://127.0.0.1:8050/app`
     const url = `http://127.0.0.1:8050/?cryptos=${cryptoList}`
-    console.log('CryptoGraphFlask: ', cryptoList, url)
 
-    // get pytorch graph data for selected crypto
+    // get pytorch graph data for selected crypto, local JSON file used for development test
     // getPlotlyGraph(cryptoList).then(data => {
     //     console.log('CryptoGraphFlask getPlotlyGraph: ', data)
     //     // graphHtml = data
@@ -17,13 +15,11 @@ const CryptoGraphFlask = (props: any) => {
 
     return (
         <>
-            {/*
-            <div
-                dangerouslySetInnerHTML={{ __html: graphHtml }}
-            />
-            */}
             <label className='text-white'>Plotly API data and graph handled and rendered on python Flask server.</label>
-            <iframe src={url} className='' style={{ width: 600, height: 600 }}></iframe>
+            {cryptoList.length > 0
+                ? <iframe src={url} className='' style={{ width: 600, height: 600 }}></iframe>
+                : <p className='text-white my-4'>No crypto currency selected.</p>
+            }
 
         </>
 

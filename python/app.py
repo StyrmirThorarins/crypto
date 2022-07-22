@@ -27,37 +27,7 @@ app = Dash(__name__, url_base_pathname='/')
 server = app.server
 CORS(app.server)
 
-### ROUTES START ###
 
-#cryptos_global = ''
-#@server.route('/<cryptos>')
-#def root_route(cryptos):
-#    global cryptos_global
-#    cryptos_global = cryptos
-#
-#    logging.debug("root_route: %s", cryptos)
-#
-#    return cryptos_global
-
-@server.route('/graph/<cryptos>')
-def route_graph(cryptos):
-    layout = getLayout(cryptos, 365)
-
-    # return jsonify({'message':'route_graph > {cryptos}'.format(cryptos=cryptos)})
-    return app.data
-
-@server.route('/test')
-def route_test():
-    layout =  html.Div(children=[
-    html.H1(children='This is our Home page'),
-
-    html.Div(children='''
-        This is our Home page content.
-    '''),
-    ])
-    return layout
-
-### ROUTES END ###
 
 def serve_layout(s: str):
     return html.H1('Serving Layout: {}'.format(s))
@@ -71,51 +41,69 @@ def getCryptoList(args: str):
 
 
 # fetch data from API
-def fetch_data(crypto_acronyms: list[str], days: int = 30):
+def fetch_graph_data(crypto_acronyms: list[str], days: int = 30):
     df = pd.DataFrame()
     df_join = pd.DataFrame()
-
-    print('crypto_acronyms', crypto_acronyms)
+    data = str
 
     for acronym in crypto_acronyms:
         logging.debug("fetching data for %s", acronym)
-        data = requests.get('https://min-api.cryptocompare.com/data/v2/histoday', params={
-            'fsym': acronym, 'tsym': 'USD', 'limit': days, 'api_key': os.getenv("CRYPTOCOMPARE_API_KEY")})
-        df = pd.DataFrame(data.json()['Data']['Data'])
-        df['crypto'] = acronym
-        df['time'] = df['time'].apply(lambda x: datetime.fromtimestamp(x))
-        df = df[['crypto', 'time', 'open', 'high',
-                 'low', 'close', 'volumefrom', 'volumeto']]
-        df_join = pd.concat([df_join, df], axis=0, ignore_index=True)
-        print('fetch_data df\n', df_join, df)
 
-    fg = px.line(df_join, x='time', y='open', color='crypto', title='Crypto Prices for the last {} days'.format(days))
+        try:
+            data = requests.get('https://min-api.cryptocompare.com/data/v2/histoday', params={
+                'fsym': acronym, 'tsym': 'USD', 'limit': days, 'api_key': os.getenv("CRYPTOCOMPARE_API_KEY")})
 
-    return fg
+            data_json = data.json()['Data']['Data']
+
+            # not all cryptos have available data, skip if no data
+            if (data_json == None):
+                logging.debug("data returned is None, for %s", acronym)
+                continue
+            else:
+                logging.debug("data found for %s", acronym)
+
+                df = pd.DataFrame(data_json)
+                df['crypto'] = acronym
+                df['time'] = df['time'].apply(
+                    lambda x: datetime.fromtimestamp(x))
+                df = df[['crypto', 'time', 'open', 'high',
+                        'low', 'close', 'volumefrom', 'volumeto']]
+                df_join = pd.concat([df_join, df], axis=0, ignore_index=True)
+        except Exception as e:
+            logging.error("fetch_graph_data error: %s", e)
+
+    # if the data frame used to construct the graph is empty return nothing
+    if(df_join.empty):
+        return None
+    else:
+        return px.line(df_join, x='time', y='open', color='crypto', title='Crypto Prices for the last {} days'.format(days))
 
 
 # returns app.layout, including plotly graph
 # @param cryptos_args: ',' seperated list of cryptocurrency acronyms | days: number of days to fetch
-def getLayout(cryptos_args: str = '', days: int = 30):
-    print('getLayout', cryptos_args)
+def get_page_content(cryptos_args: str = '', days: int = 30):
     cryptos_args = cryptos_args.strip()
     cryptos = cryptos_args.split(',')
-    #print('cryptos_args', cryptos_args, cryptos)
 
     # set up plotly graph, https://plotly.com/python/px-arguments/
     # https://community.plotly.com/t/announcing-plotly-py-4-8-plotly-express-support-for-wide-and-mixed-form-data-plus-a-pandas-backend/40048/10
-    fig = fetch_data(cryptos, days)
+    fig = fetch_graph_data(cryptos, days)
 
-    layout = html.Div(children=[
-        # render plotly graph
-        dcc.Graph(
-            id='crypto-graph',
-            figure=fig
-        )
-    ])
-
-    return layout
-
+    # return graph if data found, otherwise return a message for the user
+    if (fig == None):
+        return html.Div(children=[
+            html.Div(children='''
+                No data available for the selected crypto currency.
+            '''),
+        ], style={'color': "white", 'marginTop': 24})
+    else:
+        return html.Div(children=[
+            # render plotly graph
+            dcc.Graph(
+                id='crypto-graph',
+                figure=fig
+            )
+        ])
 
 
 app.config.suppress_callback_exceptions = True
@@ -134,13 +122,11 @@ app.layout = html.Div([
               [Input('url', 'href')])
 def _content(href: str):
     parsed_url = urlparse(href)
-    print('parsed_url', parsed_url)
     cryptos_string = parse_qs(parsed_url.query)['cryptos'][0]
-    print('cryptos_string', cryptos_string)
-
     content = ''
-    if cryptos_string != '':
-        content = getLayout(cryptos_string, 365)
+
+    if cryptos_string != None:
+        content = get_page_content(cryptos_string, 365)
     else:
         content = html.Div(children=[
             'Select cryptocurrencies to display in the graph.'
@@ -151,4 +137,4 @@ def _content(href: str):
 
 # run the app
 if __name__ == '__main__':
-    app.run_server(debug=True, port=8050)
+    app.run_server(debug=False, port=8050)

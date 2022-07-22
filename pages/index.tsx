@@ -22,7 +22,6 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     getCompleteCryptoList().then(data => {
-      console.log('loading cryptoList: ', data)
       setcompleteCryptoList(data)
       setVisibleCrypto(data)
     }).catch(err => {
@@ -32,7 +31,6 @@ const Home: NextPage = () => {
 
   // add crypto to selected list, remove from visible list
   const addCrypto = (acronym: string) => {
-    console.log('addCrypto: ', acronym)
     setSelectedCrypto([...selectedCrypto, acronym])
     setVisibleCrypto(visibleCrypto.filter(crypto => crypto !== acronym))
   }
@@ -89,15 +87,18 @@ const Home: NextPage = () => {
           <div className='flex-1 p-4'>
 
             <div className='text-slate-300'>
-              <Link href='https://github.com/StyrmirThorarins/crypto'>Projects GitHub Code Link</Link>
-              <Link href='https://github.com/StyrmirThorarins/crypto/blob/main/python/data%20handling%20workbook.ipynb'>Python notebook</Link>
-              <p>Python flask server and sample data ipynb is in the /python folder.</p>
+              <p>Project code links on GitHub :</p>
+              <div className='ml-4 mt-2'>
+                <Link href='https://github.com/StyrmirThorarins/crypto' target="_blank">Main Directory</Link><br />
+                <Link href='https://github.com/StyrmirThorarins/crypto/blob/main/python/app.py' target="_blank">Flask Server</Link><br />
+                <Link href='https://github.com/StyrmirThorarins/crypto/blob/main/python/data%20handling%20workbook.ipynb' target="_blank">Python notebook</Link>
+              </div>
             </div>
 
             <div className=''>
               <div className='border border-white rounded-md p-4 my-4'>
                 <label className='text-white text-lg'>Selected Crypto</label><br />
-                <span className='text-white text-sm italic'>If a crypto currency does not show up on the graph, then the API service does not have its time series data. Or the number of queries have been maxed out for the month.</span>
+                <span className='text-slate-300 text-sm italic'>If a crypto currency does not show up on the graph, then the API service does not have its time series data. Or the number of queries have been maxed out for the month.</span>
                 <CryptoSelected selectedCrypto={selectedCrypto} removeCrypto={removeCrypto} />
               </div>
               <div>
