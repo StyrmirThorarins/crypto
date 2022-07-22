@@ -9,6 +9,7 @@ import { useState, useEffect } from 'react'
 import { getCompleteCryptoList, getCryptoAcronymList, getCryptoData, getPlotlyGraph } from '../lib/api/crypto'
 import styles from '../styles/Home.module.css'
 import React from 'react'
+import Link from 'next/link'
 
 const Home: NextPage = () => {
 
@@ -87,17 +88,20 @@ const Home: NextPage = () => {
 
           <div className='flex-1 p-4'>
 
-            <link href='https://github.com/StyrmirThorarins/crypto'>Project GitHub Code</link>
-            <link href='https://github.com/StyrmirThorarins/crypto/blob/main/python/data%20handling%20workbook.ipynb'>Python notebook</link>
-            <p>Python flask server and and sample data ipynb is in the /python folder.</p>
+            <div className='text-slate-300'>
+              <Link href='https://github.com/StyrmirThorarins/crypto'>Projects GitHub Code Link</Link>
+              <Link href='https://github.com/StyrmirThorarins/crypto/blob/main/python/data%20handling%20workbook.ipynb'>Python notebook</Link>
+              <p>Python flask server and sample data ipynb is in the /python folder.</p>
+            </div>
 
             <div className=''>
               <div className='border border-white rounded-md p-4 my-4'>
-                <label className='text-white text-lg'>Selected Crypto</label>
+                <label className='text-white text-lg'>Selected Crypto</label><br />
+                <span className='text-white text-sm italic'>If a crypto currency does not show up on the graph, then the API service does not have its time series data. Or the number of queries have been maxed out for the month.</span>
                 <CryptoSelected selectedCrypto={selectedCrypto} removeCrypto={removeCrypto} />
               </div>
               <div>
-                <label className='text-white text-lg p-2'>Enter Crypto Acronym to Filter Non-Selected Crypto List</label><br/>
+                <label className='text-white text-lg p-2'>Enter Crypto Acronym to Filter Non-Selected Crypto List</label><br />
                 <input type="text" onChange={(e) => updateVisibleCrypto(e)} className='w-64 p-2 my-4 bg-gray-100 border-2 border-gray-200 rounded-lg' placeholder="Search" />
               </div>
               <div className='border border-white rounded-md p-4 my-4'>
@@ -108,7 +112,7 @@ const Home: NextPage = () => {
           </div>
 
           <div className='flex-1 p-4' style={{ width: 800 }} >
-            <CryptoGraphFlask cryptoSelected={CryptoSelected} />
+            <CryptoGraphFlask selectedCrypto={selectedCrypto} />
             {/* <CryptoGraph cryptoSelected={CryptoSelected} /> */}
           </div>
         </div>

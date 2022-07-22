@@ -2,9 +2,10 @@ import { getPlotlyGraph } from '../lib/api/crypto'
 
 const CryptoGraphFlask = (props: any) => {
 
-    const cryptoList = props.cryptoSelected
-    const url = `http://127.0.0.1:8050/app`
-    // const url = `http://127.0.0.1:8050/app&crypto_list=${JSON.stringify(cryptoList)}`
+    const cryptoList = props.selectedCrypto
+    // const url = `http://127.0.0.1:8050/app`
+    const url = `http://127.0.0.1:8050/?cryptos=${cryptoList}`
+    console.log('CryptoGraphFlask: ', cryptoList, url)
 
     // get pytorch graph data for selected crypto
     // getPlotlyGraph(cryptoList).then(data => {
