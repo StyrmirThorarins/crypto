@@ -80,11 +80,11 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
+      <main>
 
-        <div className='flex'>
+        <div className='flex flex-row flex-wrap'>
 
-          <div className='flex-1 p-4'>
+          <div className='w-full md:w-2/6 p-4'>
 
             <div className='text-slate-300'>
               <p>Project code links on GitHub :</p>
@@ -95,24 +95,24 @@ const Home: NextPage = () => {
               </div>
             </div>
 
-            <div className=''>
+            <div className='mt-14'>
               <div className='border border-white rounded-md p-4 my-4'>
                 <label className='text-white text-lg'>Selected Crypto</label><br />
                 <span className='text-slate-300 text-sm italic'>If a crypto currency does not show up on the graph, then the API service does not have its time series data. Or the number of queries have been maxed out for the month.</span>
                 <CryptoSelected selectedCrypto={selectedCrypto} removeCrypto={removeCrypto} />
               </div>
               <div>
-                <label className='text-white text-lg p-2'>Enter Crypto Acronym to Filter Non-Selected Crypto List</label><br />
+                <label className='text-white text-lg py-2 md:p-2'>Enter Crypto Acronym to Filter List</label><br />
                 <input type="text" onChange={(e) => updateVisibleCrypto(e)} className='w-64 p-2 my-4 bg-gray-100 border-2 border-gray-200 rounded-lg' placeholder="Search" />
               </div>
               <div className='border border-white rounded-md p-4 my-4'>
-                <label className='text-white text-lg'>Non-Selected Crypto List</label>
+                <label className='text-white text-lg'>Crypto List</label>
                 <CryptoList visibleCrypto={visibleCrypto} addCrypto={addCrypto} />
               </div>
             </div>
           </div>
 
-          <div className='flex-1 p-4' style={{ width: 800 }} >
+          <div className='md:w-3/6 p-4 md:mt-28 md:ml-12 w-full h-full' >
             <CryptoGraphFlask selectedCrypto={selectedCrypto} />
             {/* <CryptoGraph cryptoSelected={CryptoSelected} /> */}
           </div>

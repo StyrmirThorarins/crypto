@@ -16,8 +16,9 @@ const CryptoGraphFlask = (props: any) => {
     return (
         <>
             <label className='text-white'>Plotly API data and graph handled and rendered on python Flask server.</label>
+            <br/><br/>
             {cryptoList.length > 0
-                ? <iframe src={url} className='' style={{ width: 600, height: 600 }}></iframe>
+                ? <iframe src={url} className='w-full h-full' style={{height: 600}}></iframe>
                 : <p className='text-white my-4'>No crypto currency selected.</p>
             }
 
